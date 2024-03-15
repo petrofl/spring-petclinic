@@ -1,0 +1,38 @@
+name: CI with Jfrog
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Login to Jfrog Artifactory (replace with your details)
+      - name: setup Jfrog
+        uses: jfrog/setup-jfrog-cli@v3
+        env: 
+          JF_URL: ${{ secrets.ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
+        run: |
+            export SERVER_ID="soleng"
+            jf c add $SERVER_ID --url=$URL --access-token=$ACCESS_TOKEN --interactive=false
+
+
+      # Build the project (assuming npm)
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build  # Replace with your build command
+
+      # Push artifacts to Jfrog (modify paths as needed)
+      - name: Upload build artifacts
+        uses: jfrog/push-action@v1.2.2
+        with:
+          files: dist/**  # Replace with your artifact path
+          artifactory: artifactory  # Name from login step 
+          repo: my-petclinic-repo   # Replace with your repository name
