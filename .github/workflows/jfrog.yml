@@ -17,21 +17,12 @@ jobs:
         env: 
           JF_URL: ${{ secrets.ARTIFACTORY_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
+      - name: Build maven
+      #building package with jfrog cli maven 
         run: |
-            export SERVER_ID="soleng"
-            jf c add $SERVER_ID --url=$URL --access-token=$ACCESS_TOKEN --interactive=false
-
-
-      # Build the project (assuming npm)
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build  # Replace with your build command
-
-      # Push artifacts to Jfrog (modify paths as needed)
+            jf mvn clean package
       - name: Upload build artifacts
-        uses: jfrog/push-action@v1.2.2
+        uses: jfrog/push-action@v3
         with:
           files: dist/**  # Replace with your artifact path
           artifactory: artifactory  # Name from login step 
