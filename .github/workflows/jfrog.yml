@@ -26,4 +26,4 @@ jobs:
         with:
           files: dist/**  # Replace with your artifact path
           artifactory: artifactory  # Name from login step 
-          repo: my-petclinic-repo   # Replace with your repository name
+          repo: ptfl1-maven-virtual   # Replace with your repository name
